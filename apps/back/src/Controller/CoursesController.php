@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Form\CoursesType;
 use App\Service\CoursesService;
+use Nelmio\Alice\Loader\NativeLoader;
+use Nelmio\Alice\Throwable\LoadingThrowable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,10 +17,12 @@ class CoursesController extends AbstractController
     {
     }
 
+    /**
+     * @throws LoadingThrowable
+     */
     #[Route(path: '/courses/index', name: 'app_courses_index')]
     public function index(Request $request): \Symfony\Component\HttpFoundation\Response
     {
-
         $courses = $this->coursesService->getAll();
 
         return $this->render('courses/index.html.twig', [
