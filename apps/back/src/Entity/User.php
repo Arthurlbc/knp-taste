@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -30,7 +31,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private bool $isVerified = false;
+
+    #[ORM\Column(type: "datetime")]
+    private DateTime $registerAt;
+    #[ORM\Column(type: 'integer')]
+    private int $videoViewed;
+
+    public function __construct()
+    {
+        $this->registerAt = new DateTime();
+        $this->videoViewed = 0;
+    }
 
     public function getId(): ?int
     {
@@ -135,4 +147,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
     }
 
+    public function getRegisterAt(): DateTime
+    {
+        return $this->registerAt;
+    }
+
+    public function setRegisterAt(DateTime $registerAt): void
+    {
+        $this->registerAt = $registerAt;
+    }
+
+    public function getVideoViewed(): int
+    {
+        return $this->videoViewed;
+    }
+
+    public function setVideoViewed(int $videoViewed): void
+    {
+        $this->videoViewed = $videoViewed;
+    }
 }
