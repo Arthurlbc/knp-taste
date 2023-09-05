@@ -1,13 +1,13 @@
-# Symfony template project
+# Symfony project
 
 This a project for Knp-taste
 
-## Initialiser le projet :
+## Initialize project with docker :
 
 ``
 docker compose up -d --build
 ``
-## initialiser la base de donnée avec fixtures
+## Initialize database with fixtures
 ``
 docker exec <container_name> php bin/console app:fixture:load
 ``
