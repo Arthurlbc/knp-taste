@@ -21,15 +21,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         message: 'The email {{ value }} is not a valid email.',
     )]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $email;
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $username;
+    private ?string $email;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
-
-    // TODO uncomment for production
-//    #[Assert\PasswordStrength]
+    #[Assert\PasswordStrength]
     #[ORM\Column(type: 'string')]
     private string $password;
 
@@ -37,15 +33,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\Column(type: "datetime")]
-    private DateTime $registerAt;
+    private \DateTimeImmutable $registerAt;
     #[ORM\Column(type: 'integer')]
     private int $videoViewed;
 
-    public function __construct()
+    public function __construct(string $email, string $username)
     {
-        $this->registerAt = new DateTime();
+        $this->registerAt = new \DateTimeImmutable();
         $this->videoViewed = 0;
-        $this->roles = ['ROLE_USER'];
+        $this->email = $email;
+        $this->username = $username;
     }
 
     public function getId(): int
@@ -72,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     /**
@@ -140,30 +137,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): void
-    {
-        $this->username = $username;
-    }
-
-    public function getRegisterAt(): \DateTimeImmutable
-    {
-        return $this->registerAt;
-    }
-
-    public function getVideoViewed(): int
-    {
-        return $this->videoViewed;
-    }
-
-    public function setVideoViewed(int $videoViewed): void
-    {
-        $this->videoViewed = $videoViewed;
-    }
-
 }
