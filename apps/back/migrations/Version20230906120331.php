@@ -7,11 +7,19 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
+<<<<<<<< HEAD:apps/back/migrations/Version20230906120331.php
 final class Version20230906120331 extends AbstractMigration
 {
     public function getDescription(): string
     {
         return 'Database main for application knp-taste, tables user and courses';
+========
+final class Version20230906111240 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return 'Database main for knp-taste application';
+>>>>>>>> 67d31d9 (fix post-review):apps/back/migrations/Version20230906111240.php
     }
 
     public function up(Schema $schema): void
