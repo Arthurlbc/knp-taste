@@ -34,14 +34,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\Column(type: "datetime")]
-    private DateTime $registerAt;
+    private \DateTimeImmutable $registerAt;
     #[ORM\Column(type: 'integer')]
     private int $videoViewed;
 
-    public function __construct()
+    public function __construct(string $email, string $username)
     {
-        $this->registerAt = new DateTime();
+        $this->registerAt = new \DateTimeImmutable();
         $this->videoViewed = 0;
+        $this->email = $email;
+        $this->username = $username;
     }
 
     public function getId(): ?int
