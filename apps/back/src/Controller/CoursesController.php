@@ -18,9 +18,6 @@ class CoursesController extends AbstractController
     {
     }
 
-    /**
-     * @throws LoadingThrowable
-     */
     #[Route(path: '/courses/index', name: 'app_courses_index')]
     public function index(Request $request): \Symfony\Component\HttpFoundation\Response
     {
