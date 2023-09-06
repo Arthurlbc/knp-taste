@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
 
-    public function __construct(private readonly UserService $userService)
+    public function __construct(private readonly UserRepository $userRepository)
     {
     }
 
@@ -34,7 +35,8 @@ class RegistrationController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
-            $this->userService->add($user);
+            $this->userRepository->add($user, true);
+
             return $this->redirectToRoute('app_login');
         }
 
