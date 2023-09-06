@@ -22,9 +22,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         message: 'The email {{ value }} is not a valid email.',
     )]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private ?string $email;
+    private string $email;
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private ?string $username;
+    private string $username;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
