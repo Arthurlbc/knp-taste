@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Form\CoursesType;
+use App\Repository\CoursesRepository;
 use App\Service\CoursesService;
+use Nelmio\Alice\Loader\NativeLoader;
+use Nelmio\Alice\Throwable\LoadingThrowable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,15 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class CoursesController extends AbstractController
 {
 
-    public function __construct(private readonly CoursesService $coursesService)
+    public function __construct(private readonly CoursesRepository $coursesRepository)
     {
     }
 
     #[Route(path: '/courses/index', name: 'app_courses_index')]
     public function index(Request $request): \Symfony\Component\HttpFoundation\Response
     {
-
-        $courses = $this->coursesService->getAll();
+        $courses = $this->coursesRepository->findAll();
 
         return $this->render('courses/index.html.twig', [
             'courses' => $courses
@@ -34,7 +36,7 @@ class CoursesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->coursesService->add($form->getData());
+            $this->coursesRepository->add($form->getData(), true);
             return $this->redirectToRoute('app_courses_index');
         }
 

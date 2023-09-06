@@ -19,7 +19,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private ?string $email;
+    private string $email;
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    private string $username;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
@@ -28,14 +30,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private bool $isVerified = false;
 
-    public function getId(): ?int
+    #[ORM\Column(type: "datetime")]
+    private \DateTimeImmutable $registerAt;
+    #[ORM\Column(type: 'integer')]
+    private int $videoViewed;
+
+    public function __construct(string $email, string $username)
+    {
+        $this->registerAt = new \DateTimeImmutable();
+        $this->videoViewed = 0;
+        $this->email = $email;
+        $this->username = $username;
+    }
+
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -54,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -121,5 +136,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): void
+    {
+        $this->username = $username;
+    }
+
+    public function getRegisterAt(): \DateTimeImmutable
+    {
+        return $this->registerAt;
+    }
+
+    public function getVideoViewed(): int
+    {
+        return $this->videoViewed;
+    }
+
+    public function setVideoViewed(int $videoViewed): void
+    {
+        $this->videoViewed = $videoViewed;
     }
 }
