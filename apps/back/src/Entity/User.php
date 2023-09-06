@@ -3,29 +3,32 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
-
+    #[Assert\Email(
+        message: 'The email {{ value }} is not a valid email.',
+    )]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $email;
+    private ?string $email;
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $username;
+    private ?string $username;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
-
+    #[Assert\PasswordStrength]
     #[ORM\Column(type: 'string')]
     private string $password;
 
@@ -33,24 +36,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\Column(type: "datetime")]
-    private \DateTimeImmutable $registerAt;
+    private DateTime $registerAt;
     #[ORM\Column(type: 'integer')]
     private int $videoViewed;
 
-    public function __construct(string $email, string $username)
+    public function __construct()
     {
-        $this->registerAt = new \DateTimeImmutable();
+        $this->registerAt = new DateTime();
         $this->videoViewed = 0;
-        $this->email = $email;
-        $this->username = $username;
+        $this->roles = ['ROLE_USER'];
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -138,19 +140,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    public function setUsername(string $username): void
+    public function setUsername(?string $username): void
     {
         $this->username = $username;
     }
 
-    public function getRegisterAt(): \DateTimeImmutable
+    public function getRegisterAt(): DateTime
     {
         return $this->registerAt;
+    }
+
+    public function setRegisterAt(DateTime $registerAt): void
+    {
+        $this->registerAt = $registerAt;
     }
 
     public function getVideoViewed(): int
