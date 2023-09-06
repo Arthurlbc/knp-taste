@@ -70,7 +70,6 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "phpspec/phpspec": "^7.4",
         "symfony/dotenv": "6.3.*",
         "symfony/maker-bundle": "^1.50"
     }
