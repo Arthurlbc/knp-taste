@@ -9,13 +9,13 @@ docker compose up -d --build
 ``
 ## Create database
 ``
-docker exec knp-taste-arthur-php-1 php bin/console doctrine:database:create
+docker compose exec knp-taste-arthur-php-1 php bin/console doctrine:database:create
 ``
 ## Add fixtures
 Connect to container
 
 ``
-docker exec -it knp-taste-arthur-php-1 bash
+docker compose exec -it knp-taste-arthur-php-1 bash
 ``
 
 add fixtures
