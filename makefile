@@ -4,4 +4,4 @@ start: ## Start project
 stop: ## Stop project
 	docker compose stop
 database:
-	docker exec knp-taste-arthur-php-1 php bin/console doctrine:database:create
+	docker compose exec php bin/console doctrine:database:create
