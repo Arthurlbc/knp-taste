@@ -38,9 +38,12 @@
                     </li>
                 </ul>
             </div>
-            <button>Lougout
-                <form action="{{ path('app_logout') }}" class="form-logout" method="post"></form>
-            </button>
+            <a href="{{ path('app_logout') }}">
+                <button class="btn btn-dark">Logout</button>
+            </a>
+            {#            <button>Logout #}
+            {#                <form action="{{ path('app_logout') }}" class="form-logout" method="post"></form> #}
+            {#            </button> #}
         {% else %}
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">

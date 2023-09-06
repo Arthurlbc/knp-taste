@@ -8,9 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class SecurityController extends AbstractController
 {
 
-    #[Route('/logout', name: 'app_logout', methods: ['POST'])]
-    public function logout(): never
+    #[Route('/logout', name: 'app_logout')]
+    public function logout()
     {
-        // TODO
     }
 }
