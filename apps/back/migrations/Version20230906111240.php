@@ -11,7 +11,7 @@ final class Version20230906111240 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Database main for knp-taste application';
+        return 'Database main for knp-taste application, create tables courses and user';
     }
 
     public function up(Schema $schema): void
