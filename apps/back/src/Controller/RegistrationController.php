@@ -35,8 +35,6 @@ class RegistrationController extends AbstractController
                 )
             );
             $this->userService->add($user);
-
-            // TODO redirect to login page
             return $this->redirectToRoute('app_login');
         }
 
