@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTimeImmutable;
+use DateTime;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
-    
+
     // TODO uncomment for production
 //    #[Assert\PasswordStrength]
     #[ORM\Column(type: 'string')]
@@ -38,13 +38,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\Column(type: "datetime")]
-    private DateTimeImmutable $registerAt;
+    private DateTime $registerAt;
     #[ORM\Column(type: 'integer')]
     private int $videoViewed;
 
     public function __construct()
     {
-        $this->registerAt = new DateTimeImmutable();
+        $this->registerAt = new DateTime();
         $this->videoViewed = 0;
         $this->roles = ['ROLE_USER'];
     }
@@ -59,7 +59,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
     /**
+     * The public representation of the user (e.g. a username, an email address, etc.)
+     *
      * @see UserInterface
      */
     public function getUserIdentifier(): string
@@ -138,7 +147,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function getRegisterAt(): DateTimeImmutable
+    public function setUsername(?string $username): void
+    {
+        $this->username = $username;
+    }
+
+    public function getRegisterAt(): DateTime
     {
         return $this->registerAt;
     }
@@ -152,4 +166,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->videoViewed = $videoViewed;
     }
+
 }
