@@ -29,7 +29,7 @@ class CoursesController extends AbstractController
     }
 
     #[Route(path: '/courses/add', name: 'app_courses_add')]
-    public function add(Request $request): RedirectResponse|Response
+    public function add(Request $request): Response
     {
         $form = $this->createForm(CoursesType::class);
         $form->handleRequest($request);
