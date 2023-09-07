@@ -22,21 +22,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         message: 'The email {{ value }} is not a valid email.',
     )]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private ?string $email;
+    private string $email;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
-    #[Assert\PasswordStrength]
+
+    // TODO uncomment
+//    #[Assert\PasswordStrength]
     #[ORM\Column(type: 'string')]
     private string $password;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isVerified = false;
 
-    #[ORM\Column(type: "datetime")]
+    #[ORM\Column(type: "datetime_immutable")]
     private DateTimeImmutable $registerAt;
     #[ORM\Column(type: 'integer')]
     private int $videoViewed;
+    #[ORM\Column(type: 'string')]
+    private string $username;
 
     public function __construct(string $email, string $username)
     {
@@ -64,13 +68,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * The public representation of the user (e.g. a username, an email address, etc.)
-     *
      * @see UserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
@@ -132,10 +134,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isVerified;
     }
 
-    public function setIsVerified(bool $isVerified): static
+    public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
 
         return $this;
     }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    public function getRegisterAt(): DateTimeImmutable
+    {
+        return $this->registerAt;
+    }
+
+    public function getVideoViewed(): int
+    {
+        return $this->videoViewed;
+    }
+
 }

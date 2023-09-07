@@ -4,11 +4,10 @@ namespace App\Controller;
 
 use App\Form\CoursesType;
 use App\Repository\CoursesRepository;
-use App\Service\CoursesService;
-use Nelmio\Alice\Loader\NativeLoader;
-use Nelmio\Alice\Throwable\LoadingThrowable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CoursesController extends AbstractController
@@ -19,7 +18,7 @@ class CoursesController extends AbstractController
     }
 
     #[Route(path: '/courses/index', name: 'app_courses_index')]
-    public function index(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function index(Request $request): Response
     {
         $courses = $this->coursesRepository->findAll();
 
@@ -30,7 +29,7 @@ class CoursesController extends AbstractController
     }
 
     #[Route(path: '/courses/add', name: 'app_courses_add')]
-    public function add(Request $request)
+    public function add(Request $request): RedirectResponse|Response
     {
         $form = $this->createForm(CoursesType::class);
         $form->handleRequest($request);
