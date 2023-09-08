@@ -22,12 +22,8 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request): Response
+    public function register(Request $request, PasswordHasherFactoryInterface $hasherFactory): Response
     {
-        $factory = new PasswordHasherFactory([
-            'common' => ['algorithm' => 'bcrypt'],
-            'sodium' => ['algorithm' => 'sodium'],
-        ]);
 
         $form = $this->createForm(RegistrationFormType::class, null);
         $form->handleRequest($request);
@@ -36,15 +32,8 @@ class RegistrationController extends AbstractController
             $user = new User(
                 $form->get('email')->getData(),
                 $form->get('username')->getData(),
-                $hasher = $factory->getPasswordHasher('common')->hash($form->get('password')->getData()));
-//            ->hash($form->get('password')->getData())
-            // encode the plain password
-//            $user->setPassword(
-//                $userPasswordHasher->hashPassword(
-//                    $user,
-//                    $form->get('password')->getData()
-//                )
-//            );
+                $hasher = $hasherFactory->getPasswordHasher(User::class)->hash($form->get('password')->getData()));
+
             $this->userRepository->add($user, true);
 
             return $this->redirectToRoute('app_login');
