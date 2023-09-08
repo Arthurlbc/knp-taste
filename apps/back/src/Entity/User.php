@@ -18,7 +18,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
-    private int $id;
     #[ORM\Id]
     #[ORM\Column(type: "uuid", unique: true)]
     private Uuid $uuid;
@@ -134,4 +133,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->uuid;
     }
 
+    public function addCourseViewed(): void
+    {
+        $this->videoViewed++;
+    }
 }

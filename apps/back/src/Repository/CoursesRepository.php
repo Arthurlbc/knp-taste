@@ -27,4 +27,11 @@ class CoursesRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('courses')
             ->getQuery()->getArrayResult();
     }
+
+    public function remove(Courses $courses): void
+    {
+        $this->_em->remove($courses);
+        $this->_em->flush();
+    }
+
 }

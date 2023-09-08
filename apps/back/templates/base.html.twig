@@ -55,6 +55,13 @@
         {% endif %}
     </nav>
 {% endblock %}
+{% block messageFlash %}
+    {% for group, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ group }}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
 {% block body %}{% endblock %}
 </body>
 </html>

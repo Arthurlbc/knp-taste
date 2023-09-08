@@ -15,11 +15,17 @@ class Courses
     private int $id;
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private string $name;
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[ORM\Column(type: 'string', length: 180, unique: false)]
     private string $video;
 
-    public function __construct()
+    #[ORM\Column(type: 'integer')]
+    private int $reportNumber;
+
+    public function __construct(string $name, string $video)
     {
+        $this->name = $name;
+        $this->setVideo($video);
+        $this->reportNumber = 0;
     }
 
     public function getId(): int
@@ -44,8 +50,28 @@ class Courses
 
     public function setVideo(string $video): void
     {
+        $video = $this->cleanUrl($video);
         $this->video = $video;
     }
 
+    private function cleanUrl($youtubeURL)
+    {
+        if (!empty($youtubeURL)) {
+            $youtubeURL = str_replace('youtu.be/', 'www.youtube.com/embed/', $youtubeURL);
+            $youtubeURL = str_replace('www.youtube.com/watch?v=', 'www.youtube.com/embed/', $youtubeURL);
+        }
+        // -----------------
+        return $youtubeURL;
+    }
+
+    public function addReport()
+    {
+        $this->reportNumber++;
+    }
+
+    public function getReportNumber(): int
+    {
+        return $this->reportNumber;
+    }
 
 }

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Detail{% endblock %}
+
+
+{% block body %}
+
+    <div style="text-align: center">
+        <h1>{{ course.name }}</h1>
+
+        <div>{{ iframe | raw }}</div>
+
+        <a href="{{ path('app_courses_report',{'id': course.id}) }}">
+            <button class="btn btn-danger"> Report this !</button>
+        </a>
+    </div>
+{% endblock %}
