@@ -21,7 +21,7 @@
                     <td>{{ course.name }}</td>
                     <td>{{ course.reportNumber }}</td>
                     <td><a href="{{ path('app_courses_detail', {'id': course.id}) }}">Detail</a></td>
-                    <td><a href="{{ path('app_courses_remove', {'id': course.id}) }}">Remove</a></td>
+                    <td><a href="{{ path('app_courses_remove', {'id': course.id}) }}"><button class="btn btn-danger" onclick="return confirm('Are you sure?')">Remove</button></a></td>
 
                 </tr>
             {% endfor %}

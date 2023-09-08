@@ -79,7 +79,7 @@ class CoursesController extends AbstractController
         ]);
     }
 
-    #[Route(name: 'app_courses_report')]
+    #[Route(path: '/report-course/{id}',name: 'app_courses_report')]
     public function reportCourse(Request $request): Response
     {
         $course = $this->coursesRepository->findOneBy(['id' => $request->get('id')]);

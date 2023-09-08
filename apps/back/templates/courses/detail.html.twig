@@ -10,7 +10,7 @@
         <div>{{ iframe | raw }}</div>
 
         <a href="{{ path('app_courses_report',{'id': course.id}) }}">
-            <button class="btn btn-danger"> Report this !</button>
+            <button onclick="return confirm('Are you sure?')" class="btn btn-danger"> Report this !</button>
         </a>
     </div>
 {% endblock %}

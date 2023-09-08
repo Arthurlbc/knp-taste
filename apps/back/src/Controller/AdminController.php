@@ -16,11 +16,11 @@ class AdminController extends AbstractController
     #[Route(path: '/admin', name: 'app_admin')]
     public function index()
     {
-        $courses = $this->coursesRepository->findAll();
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_courses_index');
         }
 
+        $courses = $this->coursesRepository->findAll();
 
         return $this->render('/admin/index.html.twig', [
             'courses' => $courses
