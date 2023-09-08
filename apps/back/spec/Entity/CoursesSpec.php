@@ -2,7 +2,7 @@
 
 namespace spec\App\Entity;
 
-use App\Entity\Courses;
+use App\Entity\Course;
 use PhpSpec\ObjectBehavior;
 
 class CoursesSpec extends ObjectBehavior
@@ -16,7 +16,7 @@ class CoursesSpec extends ObjectBehavior
     function it_is_initializable(): void
     {
 
-        $this->shouldBeAnInstanceOf(Courses::class);
+        $this->shouldBeAnInstanceOf(Course::class);
     }
 
     function it_should_have_url_format(): void

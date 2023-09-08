@@ -8,8 +8,11 @@ use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -19,20 +22,29 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function register(Request $request): Response
     {
+        $factory = new PasswordHasherFactory([
+            'common' => ['algorithm' => 'bcrypt'],
+            'sodium' => ['algorithm' => 'sodium'],
+        ]);
+
         $form = $this->createForm(RegistrationFormType::class, null);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = new User($form->get('email')->getData(), $form->get('username')->getData());
+            $user = new User(
+                $form->get('email')->getData(),
+                $form->get('username')->getData(),
+                $hasher = $factory->getPasswordHasher('common')->hash($form->get('password')->getData()));
+//            ->hash($form->get('password')->getData())
             // encode the plain password
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
-            );
+//            $user->setPassword(
+//                $userPasswordHasher->hashPassword(
+//                    $user,
+//                    $form->get('password')->getData()
+//                )
+//            );
             $this->userRepository->add($user, true);
 
             return $this->redirectToRoute('app_login');

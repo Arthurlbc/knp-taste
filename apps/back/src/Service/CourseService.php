@@ -2,27 +2,20 @@
 
 namespace App\Service;
 
-use App\Entity\Courses;
+use App\Entity\Course;
 use App\Entity\User;
-use App\Repository\CoursesRepository;
+use App\Repository\CourseRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class CoursesService
+class CourseService
 {
 
-    public function __construct(private readonly CoursesRepository             $coursesRepository,
+    public function __construct(private readonly CourseRepository              $coursesRepository,
                                 private readonly AuthorizationCheckerInterface $authorizationChecker,
-                                private readonly EntityManagerInterface        $entityManager
     )
     {
-    }
-
-    public function addReport(Courses $courses): void
-    {
-        $courses->addReport();
-        $this->entityManager->flush();
     }
 
     public function displayCoursesUser(User $user, int $day): array
@@ -41,7 +34,7 @@ class CoursesService
 
     public function isAuthorize(User $user, int $day): bool
     {
-        if (true === $this->authorizationChecker->isGranted('ROLE_ADMIN') || $user->getVideoViewed() > 9 || $this->checkAwaitingTime($user, $day)) {
+        if ($this->authorizationChecker->isGranted('ROLE_ADMIN') || $user->getVideoViewed() > 9 || $this->checkAwaitingTime($user, $day)) {
             return true;
         }
         return false;
@@ -51,10 +44,8 @@ class CoursesService
     {
         $now = new DateTime('NOW');
         $date = $now->modify('-' . $day);
-        if ($user->getRegisterAt() > $date) {
-            return true;
-        }
-        return false;
+        
+        return $user->getRegisterAt() > $date;
     }
 
     function getIframe($urlVideo): string

@@ -42,13 +42,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $username;
 
-    public function __construct(string $email, string $username)
+    public function __construct(string $email, string $username, string $password)
     {
         $this->uuid = Uuid::v4();
         $this->registerAt = new DateTimeImmutable();
         $this->videoViewed = 0;
         $this->email = $email;
         $this->username = $username;
+        $this->password = $password;
     }
 
     public function getId(): int

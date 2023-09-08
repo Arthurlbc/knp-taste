@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CoursesRepository;
+use App\Repository\CourseRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CoursesRepository::class)]
-class Courses
+#[ORM\Entity(repositoryClass: CourseRepository::class)]
+class Course
 {
 
     #[ORM\Id]
@@ -56,9 +56,11 @@ class Courses
 
     private function cleanUrl($youtubeURL)
     {
-        if (!empty($youtubeURL)) {
+        if (!empty($youtubeURL && strstr($youtubeURL, 'youtube'))) {
             $youtubeURL = str_replace('youtu.be/', 'www.youtube.com/embed/', $youtubeURL);
             $youtubeURL = str_replace('www.youtube.com/watch?v=', 'www.youtube.com/embed/', $youtubeURL);
+        }else{
+            return 'invalid_url';
         }
         // -----------------
         return $youtubeURL;
