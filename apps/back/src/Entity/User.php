@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use DateTimeImmutable;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -15,10 +17,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+
     private int $id;
+    #[ORM\Id]
+    #[ORM\Column(type: "uuid", unique: true)]
+    private Uuid $uuid;
+
     #[Assert\Email(
         message: 'The email {{ value }} is not a valid email.',
     )]
@@ -41,6 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct(string $email, string $username)
     {
+        $this->uuid = Uuid::v4();
         $this->registerAt = new DateTimeImmutable();
         $this->videoViewed = 0;
         $this->email = $email;
@@ -122,6 +127,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getVideoViewed(): int
     {
         return $this->videoViewed;
+    }
+
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
     }
 
 }
