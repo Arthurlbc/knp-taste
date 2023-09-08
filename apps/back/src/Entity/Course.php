@@ -21,11 +21,15 @@ class Course
     #[ORM\Column(type: 'integer')]
     private int $reportNumber;
 
+    #[ORM\Column(type: 'boolean', nullable: false)]
+    private bool $published;
+
     public function __construct(string $name, string $video)
     {
         $this->name = $name;
         $this->setVideo($video);
         $this->reportNumber = 0;
+        $this->published = true;
     }
 
     public function getId(): int
@@ -59,7 +63,7 @@ class Course
         if (!empty($youtubeURL && strstr($youtubeURL, 'youtube'))) {
             $youtubeURL = str_replace('youtu.be/', 'www.youtube.com/embed/', $youtubeURL);
             $youtubeURL = str_replace('www.youtube.com/watch?v=', 'www.youtube.com/embed/', $youtubeURL);
-        }else{
+        } else {
             return 'invalid_url';
         }
         // -----------------
@@ -74,6 +78,16 @@ class Course
     public function getReportNumber(): int
     {
         return $this->reportNumber;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published;
+    }
+
+    public function setPublished(bool $published): void
+    {
+        $this->published = $published;
     }
 
 }

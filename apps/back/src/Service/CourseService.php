@@ -20,9 +20,9 @@ class CourseService
 
     public function displayCoursesUser(User $user, int $day): array
     {
-        $courses = $this->coursesRepository->findAll();
+        $courses = $this->coursesRepository->findBy(['published' => true]);
 
-        if ($this->isAuthorize($user, $day)) {
+        if ($this->isAuthorized($user, $day)) {
             return $courses;
         }
         array_walk($courses, function ($value) {
@@ -32,7 +32,7 @@ class CourseService
         return $courses;
     }
 
-    public function isAuthorize(User $user, int $day): bool
+    public function isAuthorized(User $user, int $day): bool
     {
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN') || $user->getVideoViewed() > 9 || $this->checkAwaitingTime($user, $day)) {
             return true;
@@ -44,7 +44,7 @@ class CourseService
     {
         $now = new DateTime('NOW');
         $date = $now->modify('-' . $day);
-        
+
         return $user->getRegisterAt() > $date;
     }
 

@@ -30,7 +30,7 @@ class CoursesController extends AbstractController
 
         $user = $this->getUser();
         $day = $this->getParameter('time_to_wait_for_watching_courses_full');
-        $isAuthorize = $this->coursesService->isAuthorize($user, $day);
+        $isAuthorize = $this->coursesService->isAuthorized($user, $day);
 
         $courses = $this->coursesService->displayCoursesUser($user, $day);
 
@@ -79,7 +79,7 @@ class CoursesController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/report-course/{id}',name: 'app_courses_report')]
+    #[Route(path: '/report-course/{id}', name: 'app_courses_report')]
     public function reportCourse(Request $request): Response
     {
         $course = $this->coursesRepository->findOneBy(['id' => $request->get('id')]);
@@ -89,13 +89,13 @@ class CoursesController extends AbstractController
         return $this->redirectToRoute('app_courses_index');
     }
 
-    #[Route(path: '/remove-course/{id}', name: 'app_courses_remove')]
+    #[Route(path: '/unpublished-course/{id}', name: 'app_courses_unpublish')]
     public function remove(string $id): Response
     {
         $course = $this->coursesRepository->findOneBy(['id' => $id]);
-        $this->coursesRepository->remove($course);
+        $this->coursesRepository->unpublish($course);
 
-        $this->addFlash('success', 'Course removed');
+        $this->addFlash('success', 'Course unpublished');
 
         return $this->redirectToRoute('app_admin');
     }

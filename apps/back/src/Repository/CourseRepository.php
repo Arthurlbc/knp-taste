@@ -22,15 +22,9 @@ class CourseRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllInArray()
+    public function unpublish(Course $course): void
     {
-        return $this->createQueryBuilder('courses')
-            ->getQuery()->getArrayResult();
-    }
-
-    public function remove(Course $courses): void
-    {
-        $this->_em->remove($courses);
+        $course->setPublished(false);
         $this->_em->flush();
     }
 

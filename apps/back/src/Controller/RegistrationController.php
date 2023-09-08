@@ -32,7 +32,7 @@ class RegistrationController extends AbstractController
             $user = new User(
                 $form->get('email')->getData(),
                 $form->get('username')->getData(),
-                $hasher = $hasherFactory->getPasswordHasher(User::class)->hash($form->get('password')->getData()));
+                $hasherFactory->getPasswordHasher(User::class)->hash($form->get('password')->getData()));
 
             $this->userRepository->add($user, true);
 

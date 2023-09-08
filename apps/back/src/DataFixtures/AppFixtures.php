@@ -6,21 +6,20 @@ use App\Entity\Course;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
 
-    public function __construct(private readonly UserPasswordHasherInterface $hasher)
+    public function __construct(private readonly PasswordHasherFactoryInterface $factory)
     {
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $manager,): void
     {
 
-        $user = new User('admin@admin.fr', 'administrator');
-        $password = $this->hasher->hashPassword($user, '$passw0rd_7634');
-        $user->setPassword($password);
+        $user = new User('admin@admin.fr', 'administrator', $this->factory->getPasswordHasher(User::class)->hash('$passw0rd_7634'));
         $user->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($user);

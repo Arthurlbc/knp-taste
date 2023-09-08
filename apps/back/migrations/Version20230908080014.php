@@ -21,6 +21,7 @@ final class Version20230908080014 extends AbstractMigration
         $this->addSql('ALTER TABLE courses ADD report_number INT NOT NULL');
         $this->addSql('CREATE TABLE course (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(180) NOT NULL, video VARCHAR(180) NOT NULL, report_number INT NOT NULL, UNIQUE INDEX UNIQ_169E6FB95E237E06 (name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('DROP TABLE courses');
+        $this->addSql('ALTER TABLE course ADD published TINYINT(1) NOT NULL');
     }
 
     public function down(Schema $schema): void
