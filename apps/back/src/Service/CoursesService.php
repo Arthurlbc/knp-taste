@@ -2,28 +2,39 @@
 
 namespace App\Service;
 
-use App\Entity\Courses;
+use App\Entity\User;
 use App\Repository\CoursesRepository;
+use DateTime;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CoursesService
 {
 
-    public function __construct(private readonly CoursesRepository $coursesRepository)
+    public function __construct(private readonly CoursesRepository $coursesRepository, private readonly AuthorizationCheckerInterface $authorizationChecker)
     {
     }
 
-    public function getAll(): array
+
+    public function displayCoursesUser(User $user, int $day): array
     {
-        return $this->coursesRepository->findAll();
+        $courses = $this->coursesRepository->findAll();
+        if (true === $this->authorizationChecker->isGranted('ROLE_ADMIN') || $user->getVideoViewed() > 9 || $this->checkAwaitingTime($user, $day)) {
+            return $courses;
+        }
+        array_walk($courses, function ($value) {
+            $value->setVideo('Hidden');
+        });
+        return $courses;
     }
 
-    public function add(Courses $courses)
+    private function checkAwaitingTime(User $user, int $day): bool
     {
-//        $courses = new Courses();
-//        $courses->setName($formData['name']);
-//        $courses->setVideo($formData['video']);
-        // TODO make constraint if name is unique for example
-        $this->coursesRepository->add($courses, true);
+        $now = new DateTime('NOW');
+        $date = $now->modify('-' . $day);
+        if ($user->getRegisterAt() > $date) {
+            return true;
+        }
+        return false;
     }
 
 }

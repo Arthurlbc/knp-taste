@@ -21,4 +21,10 @@ class CoursesRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+
+    public function findAllInArray()
+    {
+        return $this->createQueryBuilder('courses')
+            ->getQuery()->getArrayResult();
+    }
 }

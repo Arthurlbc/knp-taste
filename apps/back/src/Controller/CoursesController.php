@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Form\CoursesType;
 use App\Repository\CoursesRepository;
+use App\Service\CoursesService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,14 +13,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class CoursesController extends AbstractController
 {
 
-    public function __construct(private readonly CoursesRepository $coursesRepository)
+    public function __construct(private readonly CoursesRepository $coursesRepository, private readonly CoursesService $coursesService)
     {
     }
 
     #[Route(path: '/courses/index', name: 'app_courses_index')]
     public function index(Request $request): Response
     {
-        $courses = $this->coursesRepository->findAll();
+        $user = $this->getUser();
+        $day = $this->getParameter('time_to_wait_for_watching_courses_full');
+        $courses = $this->coursesService->displayCoursesUser($user, $day);
 
         return $this->render('courses/index.html.twig', [
             'courses' => $courses
