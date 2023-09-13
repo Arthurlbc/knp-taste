@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin index {% endblock %}
+
+    {% block body %}
+
+        <h1>Index</h1>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Is published</th>
+                <th scope="col">Name</th>
+                <th scope="col">Number of report</th>
+                <th scope="col">Detail</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for course in courses %}
+                <tr>
+                    {% if course.published  == 0 %}
+                        <td>No</td>
+                    {% else %}
+                        <td>Yes</td>
+                    {% endif %}
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.reportNumber }}</td>
+                    <td><a href="{{ path('app_courses_detail', {'id': course.id}) }}">Detail</a></td>
+                    <td><a href="{{ path('app_courses_unpublish', {'id': course.id}) }}">
+                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                                Unpublish
+                            </button>
+                        </a></td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    {% endblock %}

@@ -6,21 +6,15 @@ This a project for Knp-taste
 
 ```shell
 make start
-```
+````
 ## Create database
+
 ```shell
 make database
-````
-## Add fixtures
-
-Connect to container
-
-```shell
-docker exec -it knp-taste-arthur-php-1 bash
 ```
 
-add fixtures
+## Add fixtures
 
 ```shell
-php bin/console doctrine:fixtures:load
+make fixtures
 ```

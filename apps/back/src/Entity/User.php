@@ -3,46 +3,53 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeImmutable;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private int $id;
+    #[ORM\Column(type: "uuid", unique: true)]
+    private Uuid $uuid;
 
+    #[Assert\Email(
+        message: 'The email {{ value }} is not a valid email.',
+    )]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private string $email;
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $username;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
+    #[Assert\PasswordStrength]
     #[ORM\Column(type: 'string')]
     private string $password;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $isVerified = false;
-
-    #[ORM\Column(type: "datetime")]
-    private \DateTimeImmutable $registerAt;
+    #[ORM\Column(type: "datetime_immutable")]
+    private DateTimeImmutable $registerAt;
     #[ORM\Column(type: 'integer')]
     private int $videoViewed;
+    #[ORM\Column(type: 'string')]
+    private string $username;
 
-    public function __construct(string $email, string $username)
+    public function __construct(string $email, string $username, string $password)
     {
-        $this->registerAt = new \DateTimeImmutable();
+        $this->uuid = Uuid::v4();
+        $this->registerAt = new DateTimeImmutable();
         $this->videoViewed = 0;
         $this->email = $email;
         $this->username = $username;
+        $this->password = $password;
     }
 
     public function getId(): int
@@ -62,19 +69,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * The public representation of the user (e.g. a username, an email address, etc.)
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -84,58 +83,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles): void
     {
         $this->roles = $roles;
-
-        return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): void
     {
         $this->password = $password;
-
-        return $this;
     }
 
-    /**
-     * Returning a salt is only needed if you are not using a modern
-     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-     *
-     * @see UserInterface
-     */
     public function getSalt(): ?string
     {
         return null;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
     }
 
     public function getUsername(): string
@@ -148,7 +119,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
     }
 
-    public function getRegisterAt(): \DateTimeImmutable
+    public function getRegisterAt(): DateTimeImmutable
     {
         return $this->registerAt;
     }
@@ -158,8 +129,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->videoViewed;
     }
 
-    public function setVideoViewed(int $videoViewed): void
+    public function getUuid(): Uuid
     {
-        $this->videoViewed = $videoViewed;
+        return $this->uuid;
+    }
+
+    public function addCourseViewed(): void
+    {
+        $this->videoViewed++;
     }
 }

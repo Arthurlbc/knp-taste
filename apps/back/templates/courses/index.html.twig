@@ -7,19 +7,22 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">Id</th>
             <th scope="col">Name</th>
-            <th scope="col">Video</th>
+            <th>Detail</th>
         </tr>
         </thead>
         <tbody>
-            {% for course in courses %}
+        {% for course in courses %}
             <tr>
-            <td>{{ course.id }}</td>
                 <td>{{ course.name }}</td>
-                <td>{{ course.video }}</td>
+                {% if isAuthorize %}
+                    <td><a href="{{ path('app_courses_detail', {'id': course.id}) }}">Detail</a></td>
+                    {% else %}
+                    <td>Wait or become admin to see details</td>
+                {% endif %}
+
             </tr>
-            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 
